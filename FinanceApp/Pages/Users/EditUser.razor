@@ -1,0 +1,16 @@
+﻿@page "/edituser/{id}"
+@inject HttpClient Http
+@using System.Text.Json;
+@using System.Reflection;
+
+<PageTitle>@Id</PageTitle>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+    }
+}
