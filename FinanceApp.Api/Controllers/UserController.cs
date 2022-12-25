@@ -47,10 +47,8 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    public ActionResult DeleteAsync(Guid id)
+    public async Task<ActionResult> DeleteAsync(Guid id)
     {
-        _userService.DeleteAsync(id);
-
-        return Ok();
+        return Ok(await _userService.DeleteAsync(id));
     }
 }

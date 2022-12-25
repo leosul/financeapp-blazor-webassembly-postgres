@@ -53,8 +53,11 @@ public class UserService : IUserService
         return JsonSerializer.Deserialize<UserViewModel>(result, _options);
     }
 
-    public Task<bool> DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(string id)
     {
-        throw new NotImplementedException();
+        var response = await _client.DeleteAsync($"users/{Guid.Parse(id)}");
+        var content = await response.Content.ReadAsStringAsync();
+
+        return JsonSerializer.Deserialize<bool>(content, _options);
     }
 }
