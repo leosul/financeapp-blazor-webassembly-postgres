@@ -1,0 +1,62 @@
+﻿@page "/detailuser/{id}"
+@inject IUserService _userService;
+@inject NavigationManager NavigationManager
+@using System.Text.Json;
+@using System.Reflection;
+@using FinanceApp.Services;
+@using FinanceApp.ViewModel;
+
+<PageTitle>Detalhes do Usuário - @userViewModel.Name</PageTitle>
+
+<br />
+<div class="card text-secondary border-primary mb-3">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-9">
+        <h3>Detalhes do Usuário - @userViewModel.Name</h3>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="mb-3">
+            <label for="Id">Id</label>
+            <input form="Id" class="form-control" disabled="disabled" @bind="@userViewModel.Id" />
+        </div>
+        <div class="mb-3">
+            <label for="Name">Nome</label>
+            <input form="Name" class="form-control" disabled="disabled" @bind="@userViewModel.Name" />
+        </div>
+        <div class="mb-3">
+            <label for="CreatedAt">Data de Criação</label>
+            <input form="CreatedAt" class="form-control" disabled="disabled" @bind="@userViewModel.CreatedAt" />
+        </div>
+        <div class="row">
+            <div class="mb-3">
+                <input type="button" class="btn btn-primary" @onclick="@Edit" value="Editar" />
+                <input type="button" class="btn btn-info" @onclick="@Back" value="Voltar" />
+            </div>
+        </div>
+  </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    UserViewModel userViewModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        userViewModel = await _userService.FindByIdAsync(Id.ToString());
+    }
+
+    protected void Edit()
+    {
+        NavigationManager.NavigateTo($"/edituser/{Id}");
+    }
+
+    protected void Back()
+    {
+        NavigationManager.NavigateTo("/users");
+    }
+}

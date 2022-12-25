@@ -15,6 +15,17 @@ public class UserService : IUserService
         _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = false };
     }
 
+    public async Task<bool> AddAsync(UserViewModel user)
+    {
+        var content = JsonSerializer.Serialize(user);
+        var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+
+        var response = await _client.PostAsync($"users", bodyContent);
+        var result = await response.Content.ReadAsStringAsync();
+
+        return JsonSerializer.Deserialize<bool>(result, _options);
+    }
+
     public async Task<List<UserViewModel>> FindAllAsync()
     {
         var response = await _client.GetAsync("users");
@@ -40,5 +51,10 @@ public class UserService : IUserService
         var result = await response.Content.ReadAsStringAsync();
 
         return JsonSerializer.Deserialize<UserViewModel>(result, _options);
+    }
+
+    public Task<bool> DeleteAsync(string id)
+    {
+        throw new NotImplementedException();
     }
 }

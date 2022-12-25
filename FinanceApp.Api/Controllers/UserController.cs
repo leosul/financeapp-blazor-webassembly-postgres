@@ -21,9 +21,9 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult AddAsync(User user)
+    public async Task<ActionResult> AddAsync(UserViewModel user)
     {
-        return Ok(_userService.AddAsync(user));
+        return Ok(await _userService.AddAsync(_mapper.Map<User>(user)));
     }
 
     [HttpGet]
