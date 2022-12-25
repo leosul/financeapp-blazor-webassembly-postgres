@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace FinanceApp.ViewModel;
 
@@ -8,6 +9,7 @@ public class UserViewModel
     public Guid Id { get; set; }
 
     [JsonPropertyName("name")]
+    [Required(ErrorMessage = "Nome é obrigatório")]
     public string Name { get; set; }
     
     [JsonPropertyName("createdAt")]

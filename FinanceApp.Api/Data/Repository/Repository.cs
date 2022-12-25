@@ -15,6 +15,7 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
         DbSet = db.Set<TEntity>();
     }
 
+    public IUnitOfWork UnitOfWork => Db;
     public virtual async Task<List<TEntity>> Find(Expression<Func<TEntity, bool>> predicate)
     {
         return await DbSet.AsNoTracking().Where(predicate).ToListAsync();
@@ -33,35 +34,26 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
     public virtual void Add(TEntity entity)
     {
         DbSet.Add(entity);
-        SaveChanges();
     }
 
     public virtual void Add(IEnumerable<TEntity> entities)
     {
         DbSet.AddRange(entities);
-        SaveChanges();
     }
 
     public virtual void Update(TEntity entity)
     {
         DbSet.Update(entity);
-        SaveChanges();
     }
 
     public virtual void Remove(Guid id)
     {
         DbSet.Remove(new TEntity { Id = id });
-        SaveChanges();
     }
 
     public virtual void Remove(IEnumerable<TEntity> entities)
     {
         DbSet.RemoveRange(entities);
-    }
-
-    private void SaveChanges()
-    {
-        Db.SaveChanges();
     }
 
     private bool _disposed = false;

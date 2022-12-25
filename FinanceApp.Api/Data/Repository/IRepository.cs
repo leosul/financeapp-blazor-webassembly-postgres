@@ -5,6 +5,7 @@ namespace FinanceApp.Api.Data.Repository;
 
 public interface IRepository<TEntity> : IDisposable where TEntity : EntityBase
 {
+    IUnitOfWork UnitOfWork { get; }
     void Add(TEntity entity);
     void Add(IEnumerable<TEntity> entities);
     Task<TEntity> GetById(Guid id);

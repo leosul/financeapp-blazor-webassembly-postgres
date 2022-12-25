@@ -12,23 +12,37 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
+    public async Task<bool> AddAsync(User user)
+    {
+        _userRepository.Add(user);
+
+        return await _userRepository.UnitOfWork.Commit();
+    }
+
     public async Task<List<User>> FindAllAsync()
     {
-        return await _userRepository.GetAll();
+        var result = await _userRepository.GetAll();
+
+        return result.OrderBy(s => s.Name).ToList();
     }
 
-    public Task<User> FindByIdAsync(Guid id)
+    public async Task<User> FindByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await _userRepository.GetById(id);
     }
 
-    public Task UpdateAsync(User user)
+    public async Task<User> UpdateAsync(User user)
     {
-        throw new NotImplementedException();
+        _userRepository.Update(user);
+        await _userRepository.UnitOfWork.Commit();
+
+        return await _userRepository.GetById(user.Id);
     }
  
-    public Task DeleteAsync(Guid id)
+    public async Task<bool> DeleteAsync(Guid id)
     {
-        throw new NotImplementedException();
+        _userRepository.Remove(id);
+
+        return await _userRepository.UnitOfWork.Commit();
     }
 }

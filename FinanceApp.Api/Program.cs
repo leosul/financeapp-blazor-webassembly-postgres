@@ -1,4 +1,6 @@
+using AutoMapper;
 using FinanceApp.Api.Application;
+using FinanceApp.Api.Configurations;
 using FinanceApp.Api.Data.Context;
 using FinanceApp.Api.Data.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +30,14 @@ builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
 
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
+
+//AutoMapper
+var mappingConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingDomain());
+});
+
+builder.Services.AddSingleton(mappingConfig.CreateMapper());
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

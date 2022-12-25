@@ -1,10 +1,11 @@
 ﻿using FinanceApp.Api.Data.Mappings;
+using FinanceApp.Api.Data.Repository;
 using FinanceApp.Api.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceApp.Api.Data.Context;
 
-public class FinanceDbContext : DbContext
+public class FinanceDbContext : DbContext, IUnitOfWork
 {
     public FinanceDbContext(DbContextOptions<FinanceDbContext> options) : base(options)
     {
@@ -55,5 +56,15 @@ public class FinanceDbContext : DbContext
         modelBuilder.ApplyConfiguration(new UserMapping());
         modelBuilder.ApplyConfiguration(new CategoryMapping());
         modelBuilder.ApplyConfiguration(new ExpenseMapping());
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<bool> Commit()
+    {
+        return await base.SaveChangesAsync() > 0;
     }
 }
