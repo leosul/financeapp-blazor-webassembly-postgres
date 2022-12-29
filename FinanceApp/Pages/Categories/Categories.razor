@@ -1,0 +1,78 @@
+﻿@page "/categories"
+@inject ICategoryService _categoryService;
+@inject NavigationManager NavigationManager
+@using System.Text.Json;
+@using System.Reflection;
+@using FinanceApp.Services;
+@using FinanceApp.ViewModel;
+
+<PageTitle>Categorias</PageTitle>
+
+<br />
+<div class="card text-secondary border-primary mb-3">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-9">
+                <h3>Lista de Categorias</h3>
+            </div>
+            <div class="col-md-3" style="text-align:right">
+                <div class="float-right">
+                    <input type="button" class="btn btn-primary" @onclick="@AddCategory" value="Adicionar Categoria" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>
+                        Id
+                    </th>
+                    <th>
+                        Nome
+                    </th>
+                    <th>
+                        Data de Criação
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in categories)
+                {
+                    <tr>
+                        <td>
+                            @item.Id.ToString().Substring(0, 5)
+                        </td>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.CreatedAt.ToShortDateString()
+                        </td>
+                        <td class="text-right">
+                            <a href="/detailcategory/@item.Id"><spam class="oi oi-magnifying-glass"></spam></a>
+                            <a href="/editcategory/@item.Id"><spam class="oi oi-pencil"></spam></a>
+                            <a href="/deletecategory/@item.Id"><spam class="oi oi-delete"></spam></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    List<CategoryViewModel> categories = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await _categoryService.FindAllAsync();
+    }
+
+    protected void AddCategory()
+    {
+        NavigationManager.NavigateTo("/addcategory");
+    }
+}

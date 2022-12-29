@@ -30,6 +30,8 @@ builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
 
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
 
 //AutoMapper
 var mappingConfig = new MapperConfiguration(mc =>

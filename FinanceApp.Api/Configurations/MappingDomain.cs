@@ -10,5 +10,11 @@ public class MappingDomain : Profile
 	{
         CreateMap<User, UserViewModel>()
             .ReverseMap();
+
+        CreateMap<Category, CategoryViewModel>()
+            .ReverseMap();
+
+        CreateMap<Expense, ExpenseViewModel>()
+            .ReverseMap();
     }
 }
