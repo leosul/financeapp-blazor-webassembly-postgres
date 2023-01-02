@@ -38,6 +38,9 @@
                         Categoria
                     </th>
                     <th>
+                        Usuário
+                    </th>
+                    <th>
                         Data de Criação
                     </th>
                     <th></th>
@@ -57,7 +60,10 @@
                             @item.CategoryName
                         </td>
                         <td>
-                            @item.CreatedAt.ToShortDateString()
+                            @item.UserName
+                        </td>
+                        <td>
+                            @item.CreatedAt.ToString("dd/MM/yyyy")
                         </td>
                         <td class="text-right">
                             <a href="/detailexpense/@item.Id"><spam class="oi oi-magnifying-glass"></spam></a>

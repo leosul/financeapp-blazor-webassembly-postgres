@@ -12,12 +12,9 @@ public class Expense : EntityBase
     }
 
     public string Name { get; private set; }
-
     public decimal Value { get; private set; }
-
     public Category Category { get; private set; }
     public Guid CategoryId { get; private set; }
-
     public User User { get; private set; }
     public Guid UserId { get; private set; }
 }

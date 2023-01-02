@@ -1,11 +1,12 @@
 ﻿using FinanceApp.Api.Models;
+using FinanceApp.Api.ViewModels;
 
 namespace FinanceApp.Api.Application;
 
 public interface IExpenseService
 {
     Task<bool> AddAsync(Expense expense);
-    Task<List<Expense>> FindAllAsync();
+    Task<List<ExpenseViewModel>> FindAllAsync();
     Task<Expense> FindByIdAsync(Guid id);
     Task<Expense> UpdateAsync(Expense expense);
     Task<bool> DeleteAsync(Guid id);

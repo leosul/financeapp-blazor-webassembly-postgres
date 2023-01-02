@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using FinanceApp.ViewModel;
 
 namespace FinanceApp.Services;
@@ -12,7 +13,7 @@ public class ExpenseService : IExpenseService
     public ExpenseService(HttpClient client)
     {
         _client = client;
-        _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = false };
+        _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = false, ReferenceHandler = ReferenceHandler.IgnoreCycles };
     }
 
     public async Task<bool> AddAsync(ExpenseViewModel expense)

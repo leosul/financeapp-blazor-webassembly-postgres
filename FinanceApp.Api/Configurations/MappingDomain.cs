@@ -15,12 +15,6 @@ public class MappingDomain : Profile
             .ReverseMap();
 
         CreateMap<Expense, ExpenseViewModel>()
-            .ForMember(s => s.Name, a => a.MapFrom(s => s.Name))
-            .ForMember(s => s.CategoryId, a => a.MapFrom(s => s.CategoryId))
-            .ForMember(s => s.UserId, a => a.MapFrom(s => s.UserId))
-            .ForMember(s => s.Name, a => a.MapFrom(s => s.Name))
-            .ForMember(s => s.Category, a => a.Ignore())
-            .ForMember(s => s.User, a => a.Ignore())
             .ReverseMap();
     }
 }

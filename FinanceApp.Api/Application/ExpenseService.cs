@@ -1,5 +1,6 @@
 ﻿using FinanceApp.Api.Data.Repository;
 using FinanceApp.Api.Models;
+using FinanceApp.Api.ViewModels;
 
 namespace FinanceApp.Api.Application;
 
@@ -19,16 +20,26 @@ public class ExpenseService : IExpenseService
         return await _expenseRepository.UnitOfWork.Commit();
     }
 
-    public async Task<List<Expense>> FindAllAsync()
+    public async Task<List<ExpenseViewModel>> FindAllAsync()
     {
-        var result = await _expenseRepository.GetAll();
+        var result = await _expenseRepository.GetAllExpensesAsync();
 
-        return result.OrderBy(s => s.Name).ToList();
+        return result.Select(s => new ExpenseViewModel()
+        {
+            CategoryId = s.CategoryId,
+            UserId = s.UserId,
+            Id = s.Id,
+            Value = s.Value,
+            Name = s.Name,
+            CategoryName = s.Category.Name,
+            UserName = s.User.Name,
+            CreatedAt = s.CreatedAt,
+        }).OrderBy(s => s.CreatedAt).ToList();
     }
 
     public async Task<Expense> FindByIdAsync(Guid id)
     {
-        return await _expenseRepository.GetById(id);
+        return await _expenseRepository.GetExpensesByIdAsync(id);
     }
 
     public async Task<Expense> UpdateAsync(Expense expense)

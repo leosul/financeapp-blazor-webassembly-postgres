@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using AutoMapper;
 using FinanceApp.Api.Application;
 using FinanceApp.Api.Configurations;
@@ -7,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddDbContext<FinanceDbContext>(option =>
             option.UseNpgsql("Host=localhost;Port=5432;Pooling=true;Database=finance;User Id=postgres;Password=postgres;")
