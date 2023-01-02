@@ -7,7 +7,7 @@ public interface IExpenseService
 {
     Task<bool> AddAsync(Expense expense);
     Task<List<ExpenseViewModel>> FindAllAsync();
-    Task<Expense> FindByIdAsync(Guid id);
+    Task<ExpenseViewModel> FindByIdAsync(Guid id);
     Task<Expense> UpdateAsync(Expense expense);
     Task<bool> DeleteAsync(Guid id);
 }

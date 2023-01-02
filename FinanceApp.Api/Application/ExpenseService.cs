@@ -37,14 +37,31 @@ public class ExpenseService : IExpenseService
         }).OrderBy(s => s.CreatedAt).ToList();
     }
 
-    public async Task<Expense> FindByIdAsync(Guid id)
+    public async Task<ExpenseViewModel> FindByIdAsync(Guid id)
     {
-        return await _expenseRepository.GetExpensesByIdAsync(id);
+        var result = await _expenseRepository.GetExpensesByIdAsync(id);
+
+        return new ExpenseViewModel()
+        {
+            CategoryId = result.CategoryId,
+            UserId = result.UserId,
+            Id = result.Id,
+            Value = result.Value,
+            Name = result.Name,
+            CategoryName = result.Category.Name,
+            UserName = result.User.Name,
+            CreatedAt = result.CreatedAt,
+        };
     }
 
     public async Task<Expense> UpdateAsync(Expense expense)
     {
-        _expenseRepository.Update(expense);
+        var expenseUpdated = new Expense(expense.Name, expense.Value, expense.CategoryId, expense.UserId)
+        {
+            Id = expense.Id
+        };
+
+        _expenseRepository.Update(expenseUpdated);
         await _expenseRepository.UnitOfWork.Commit();
 
         return await _expenseRepository.GetById(expense.Id);

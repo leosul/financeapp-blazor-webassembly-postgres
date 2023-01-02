@@ -1,21 +1,19 @@
-﻿@page "/detailexpense/{id}"
-@inject ICategoryService _categoryService;
+﻿@page "/deleteexpense/{id}"
 @inject IExpenseService _expenseService;
-@inject IUserService _userService;
 @inject NavigationManager NavigationManager
 @using System.Text.Json;
 @using System.Reflection;
 @using FinanceApp.Services;
 @using FinanceApp.ViewModel;
 
-<PageTitle>Detalhes da Despesa - @expenseViewModel.Name</PageTitle>
+<PageTitle>Deletar Despesa - @expenseViewModel.Name</PageTitle>
 
 <br />
 <div class="card text-secondary border-primary mb-3">
   <div class="card-header">
     <div class="row">
       <div class="col-md-9">
-                <h3>Detalhes da Despesa - @expenseViewModel.Name</h3>
+                <h3>Deletar Despesa - @expenseViewModel.Name</h3>
       </div>
     </div>
   </div>
@@ -35,21 +33,13 @@
         <div class="mb-3">
             <label for="Categoria">Categoria</label>
             <InputSelect id="category" @bind-Value="expenseViewModel.CategoryId" disabled="disabled" class="form-control">
-                <option value="">Selecione uma categoria...</option>
-                @foreach (var category in categories)
-                {
-                        <option value="@category.Id">@category.Name</option>
-                }
+                <option value=@expenseViewModel.CategoryId>@expenseViewModel.CategoryName</option>
             </InputSelect>
         </div>
         <div class="mb-3">
             <label for="Usuario">Usuario</label>
             <InputSelect id="user" @bind-Value="expenseViewModel.UserId" disabled="disabled" class="form-control">
-                <option value="">Selecione um usuário...</option>
-                @foreach (var user in users)
-                {
-                        <option value="@user.Id">@user.Name</option>
-                }
+                <option value="@expenseViewModel.UserId">@expenseViewModel.UserName</option>
             </InputSelect>
         </div>
         <div class="mb-3">
@@ -58,7 +48,7 @@
         </div>
         <div class="row">
             <div class="mb-3">
-                <input type="button" class="btn btn-primary" @onclick="@Edit" value="Editar" />
+                <input type="button" class="btn btn-danger" @onclick="@Delete" value="Deletar" />
                 <input type="button" class="btn btn-info" @onclick="@Back" value="Voltar" />
             </div>
         </div>
@@ -70,19 +60,16 @@
     public string Id { get; set; }
 
     ExpenseViewModel expenseViewModel = new();
-    List<CategoryViewModel> categories = new();
-    List<UserViewModel> users = new();
 
     protected override async Task OnInitializedAsync()
     {
         expenseViewModel = await _expenseService.FindByIdAsync(Id.ToString());
-        categories = await _categoryService.FindAllAsync();
-        users = await _userService.FindAllAsync();
     }
 
-    protected void Edit()
+    protected async Task Delete()
     {
-        NavigationManager.NavigateTo($"/editexpense/{Id}");
+        await _expenseService.DeleteAsync(Id.ToString());
+        NavigationManager.NavigateTo($"/expenses");
     }
 
     protected void Back()

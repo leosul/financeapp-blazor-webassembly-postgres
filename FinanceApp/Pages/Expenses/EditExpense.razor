@@ -1,4 +1,4 @@
-﻿@page "/detailexpense/{id}"
+﻿@page "/editexpense/{id}"
 @inject ICategoryService _categoryService;
 @inject IExpenseService _expenseService;
 @inject IUserService _userService;
@@ -8,43 +8,43 @@
 @using FinanceApp.Services;
 @using FinanceApp.ViewModel;
 
-<PageTitle>Detalhes da Despesa - @expenseViewModel.Name</PageTitle>
+<PageTitle>Editar Despesa - @expenseViewModel.Name</PageTitle>
 
 <br />
 <div class="card text-secondary border-primary mb-3">
-  <div class="card-header">
-    <div class="row">
-      <div class="col-md-9">
-                <h3>Detalhes da Despesa - @expenseViewModel.Name</h3>
-      </div>
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-9">
+                <h3>Editar Despesa - @expenseViewModel.Name</h3>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="card-body">
-    <div class="mb-3">
+    <div class="card-body">
+        <div class="mb-3">
             <label for="Id">Id</label>
             <input form="Id" class="form-control" disabled="disabled" @bind="@expenseViewModel.Id" />
         </div>
         <div class="mb-3">
-            <label for="Name">Nome</label>
-            <input form="Name" class="form-control" disabled="disabled" @bind="@expenseViewModel.Name" />
+            <label for="Nome">Nome</label>
+            <input form="Nome" class="form-control" @bind="@expenseViewModel.Name" />
         </div>
         <div class="mb-3">
-            <label for="CreatedAt">Data de Criação</label>
-            <input form="CreatedAt" class="form-control" disabled="disabled" @bind="@expenseViewModel.CreatedAt" />
+            <label for="Data">Data de Criação</label>
+            <input form="Data" class="form-control" disabled="disabled" @bind="@expenseViewModel.CreatedAt" />
         </div>
         <div class="mb-3">
             <label for="Categoria">Categoria</label>
-            <InputSelect id="category" @bind-Value="expenseViewModel.CategoryId" disabled="disabled" class="form-control">
+            <InputSelect id="category" @bind-Value="expenseViewModel.CategoryId" class="form-control">
                 <option value="">Selecione uma categoria...</option>
                 @foreach (var category in categories)
                 {
-                        <option value="@category.Id">@category.Name</option>
+                    <option value="@category.Id">@category.Name</option>
                 }
             </InputSelect>
         </div>
         <div class="mb-3">
             <label for="Usuario">Usuario</label>
-            <InputSelect id="user" @bind-Value="expenseViewModel.UserId" disabled="disabled" class="form-control">
+            <InputSelect id="user" @bind-Value="expenseViewModel.UserId" class="form-control">
                 <option value="">Selecione um usuário...</option>
                 @foreach (var user in users)
                 {
@@ -54,15 +54,15 @@
         </div>
         <div class="mb-3">
             <label for="valor">Valor</label>
-            <InputNumber @bind-Value="expenseViewModel.Value" disabled="disabled" class="form-control" id="value" />
+            <InputNumber @bind-Value="expenseViewModel.Value" class="form-control" id="value" />
         </div>
         <div class="row">
             <div class="mb-3">
-                <input type="button" class="btn btn-primary" @onclick="@Edit" value="Editar" />
-                <input type="button" class="btn btn-info" @onclick="@Back" value="Voltar" />
+                <input type="button" class="btn btn-primary" @onclick="@Save" value="Salvar" />
+                <input type="button" class="btn btn-danger" @onclick="@Cancel" value="Cancelar" />
             </div>
         </div>
-  </div>
+    </div>
 </div>
 
 @code {
@@ -80,12 +80,13 @@
         users = await _userService.FindAllAsync();
     }
 
-    protected void Edit()
+    protected async Task Save()
     {
-        NavigationManager.NavigateTo($"/editexpense/{Id}");
+        expenseViewModel = await _expenseService.UpdatedAsync(expenseViewModel);
+        NavigationManager.NavigateTo("/expenses");
     }
 
-    protected void Back()
+    protected void Cancel()
     {
         NavigationManager.NavigateTo("/expenses");
     }
