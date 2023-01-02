@@ -20,9 +20,15 @@ public class ExpenseViewModel
     [Required(ErrorMessage = "Categoria é obrigatório")]
     public Guid CategoryId { get; set; }
 
+    [JsonPropertyName("categoryName")]
+    public string CategoryName { get; set; }
+
     [JsonPropertyName("userId")]
     [Required(ErrorMessage = "Usuário é obrigatório")]
     public Guid UserId { get; set; }
+
+    [JsonPropertyName("userName")]
+    public string UserName { get; set; }
 
     [JsonPropertyName("createdAt")]
     public DateTime CreatedAt { get; set; }

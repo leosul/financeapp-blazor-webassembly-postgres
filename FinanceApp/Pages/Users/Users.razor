@@ -13,11 +13,11 @@
     <div class="card-header">
         <div class="row">
             <div class="col-md-9">
-                <h3>Lista de Usuários</h3>
+                <h3>@Loading()</h3>
             </div>
             <div class="col-md-3" style="text-align:right">
                 <div class="float-right">
-                    <input type="button" class="btn btn-primary" @onclick="@AddUser" value="Adicionar Usuário" />
+                    <input type="button" class="btn btn-primary" disabled="@IsDisabled" @onclick="@AddUser" value="Adicionar Usuário" />
                 </div>
             </div>
         </div>
@@ -65,14 +65,21 @@
 
 @code {
     List<UserViewModel> users = new();
+    protected bool IsDisabled = true;
 
     protected override async Task OnInitializedAsync()
     {
         users = await _userService.FindAllAsync();
+        IsDisabled = false;
     }
 
     protected void AddUser()
     {
         NavigationManager.NavigateTo("/adduser");
+    }
+
+    protected string Loading()
+    {
+        return IsDisabled ? "Lista de Usuários - Carregando os dados..." : "Lista de Usuários";
     }
 }

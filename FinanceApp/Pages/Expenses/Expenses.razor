@@ -1,12 +1,14 @@
-﻿@page "/categories"
-@inject ICategoryService _categoryService;
+﻿@page "/expenses"
 @inject NavigationManager NavigationManager
+@inject ICategoryService _categoryService;
+@inject IExpenseService _expenseService;
 @using System.Text.Json;
 @using System.Reflection;
 @using FinanceApp.Services;
 @using FinanceApp.ViewModel;
+@using FinanceApp.Shared.Components.DropDown;
 
-<PageTitle>Categorias</PageTitle>
+<PageTitle>Despesas</PageTitle>
 
 <br />
 <div class="card text-secondary border-primary mb-3">
@@ -17,7 +19,7 @@
             </div>
             <div class="col-md-3" style="text-align:right">
                 <div class="float-right">
-                    <input type="button" class="btn btn-primary" disabled="@IsDisabled" @onclick="@AddCategory" value="Adicionar Categoria" />
+                    <input type="button" class="btn btn-primary" disabled="@IsDisabled" @onclick="@AddCategory" value="Adicionar Despesa" />
                 </div>
             </div>
         </div>
@@ -33,13 +35,16 @@
                         Nome
                     </th>
                     <th>
+                        Categoria
+                    </th>
+                    <th>
                         Data de Criação
                     </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in categories)
+                @foreach (var item in expenses)
                 {
                     <tr>
                         <td>
@@ -49,12 +54,15 @@
                             @item.Name
                         </td>
                         <td>
+                            @item.CategoryName
+                        </td>
+                        <td>
                             @item.CreatedAt.ToShortDateString()
                         </td>
                         <td class="text-right">
-                            <a href="/detailcategory/@item.Id"><spam class="oi oi-magnifying-glass"></spam></a>
-                            <a href="/editcategory/@item.Id"><spam class="oi oi-pencil"></spam></a>
-                            <a href="/deletecategory/@item.Id"><spam class="oi oi-delete"></spam></a>
+                            <a href="/detailexpense/@item.Id"><spam class="oi oi-magnifying-glass"></spam></a>
+                            <a href="/editexpense/@item.Id"><spam class="oi oi-pencil"></spam></a>
+                            <a href="/deleteexpense/@item.Id"><spam class="oi oi-delete"></spam></a>
                         </td>
                     </tr>
                 }
@@ -64,22 +72,22 @@
 </div>
 
 @code {
-    List<CategoryViewModel> categories = new();
+    List<ExpenseViewModel> expenses = new();
     protected bool IsDisabled = true;
 
     protected override async Task OnInitializedAsync()
     {
-        categories = await _categoryService.FindAllAsync();
+        expenses = await _expenseService.FindAllAsync();
         IsDisabled = false;
     }
 
     protected void AddCategory()
     {
-        NavigationManager.NavigateTo("/addcategory");
+        NavigationManager.NavigateTo("/addexpense");
     }
 
     protected string Loading()
     {
-        return IsDisabled ? "Lista de Categorias - Carregando os dados..." : "Lista de Categorias";
+        return IsDisabled ? "Lista de Despesas - Carregando os dados..." : "Lista de Despesas";
     }
 }

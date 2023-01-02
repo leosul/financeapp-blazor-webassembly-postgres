@@ -14,7 +14,7 @@ public class ExpenseService : IExpenseService
 
     public async Task<bool> AddAsync(Expense expense)
     {
-        _expenseRepository.Add(expense);
+        _expenseRepository.Add(new Expense(expense.Name, expense.Value, expense.CategoryId, expense.UserId));
 
         return await _expenseRepository.UnitOfWork.Commit();
     }
