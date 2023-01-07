@@ -1,0 +1,47 @@
+﻿@page "/adduser"
+@inject IUserService _userService;
+@inject NavigationManager NavigationManager
+@using System.Text.Json;
+@using System.Reflection;
+@using FinanceApp.Services;
+@using FinanceApp.ViewModel;
+
+<PageTitle>Novo Usuário</PageTitle>
+
+<br />
+<div class="card text-secondary border-primary mb-3">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-9">
+                <h3>Novo Usuário</h3>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <label for="Name">Nome</label>
+            <input form="Name" class="form-control" @bind="@userViewModel.Name" />
+        </div>
+        <div class="row">
+            <div class="mb-3">
+                <input type="button" class="btn btn-primary" @onclick="@Save" value="Salvar" />
+                <input type="button" class="btn btn-danger" @onclick="@Cancel" value="Cancelar" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    UserViewModel userViewModel = new();
+
+    protected async Task Save()
+    {
+        await _userService.AddAsync(userViewModel);
+        NavigationManager.NavigateTo("/users");
+    }
+
+    protected void Cancel()
+    {
+        NavigationManager.NavigateTo("/users");
+    }
+}

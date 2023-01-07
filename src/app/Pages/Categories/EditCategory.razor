@@ -1,0 +1,63 @@
+﻿@page "/editcategory/{id}"
+@inject ICategoryService _categoryService;
+@inject NavigationManager NavigationManager
+@using System.Text.Json;
+@using System.Reflection;
+@using FinanceApp.Services;
+@using FinanceApp.ViewModel;
+
+<PageTitle>Editar Categoria - @categoryViewModel.Name</PageTitle>
+
+<br />
+<div class="card text-secondary border-primary mb-3">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-9">
+                <h3>Editar Categoria - @categoryViewModel.Name</h3>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="mb-3">
+            <label for="FirstName">Id</label>
+            <input form="FirstName" class="form-control" disabled="disabled" @bind="@categoryViewModel.Id" />
+        </div>
+        <div class="mb-3">
+            <label for="FirstName">Nome</label>
+            <input form="FirstName" class="form-control" @bind="@categoryViewModel.Name" />
+        </div>
+        <div class="mb-3">
+            <label for="FirstName">Data de Criação</label>
+            <input form="FirstName" class="form-control" disabled="disabled" @bind="@categoryViewModel.CreatedAt" />
+        </div>
+        <div class="row">
+            <div class="mb-3">
+                <input type="button" class="btn btn-primary" @onclick="@Save" value="Salvar" />
+                <input type="button" class="btn btn-danger" @onclick="@Cancel" value="Cancelar" />
+            </div>
+        </div>
+  </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    CategoryViewModel categoryViewModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        categoryViewModel = await _categoryService.FindByIdAsync(Id.ToString());
+    }
+
+    protected async Task Save()
+    {
+        categoryViewModel = await _categoryService.UpdatedAsync(categoryViewModel);
+        NavigationManager.NavigateTo("/categories");
+    }
+
+    protected void Cancel()
+    {
+        NavigationManager.NavigateTo("/categories");
+    }
+}

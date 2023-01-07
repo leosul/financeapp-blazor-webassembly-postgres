@@ -1,0 +1,85 @@
+﻿@page "/users"
+@inject IUserService _userService;
+@inject NavigationManager NavigationManager
+@using System.Text.Json;
+@using System.Reflection;
+@using FinanceApp.Services;
+@using FinanceApp.ViewModel;
+
+<PageTitle>Usuários</PageTitle>
+
+<br />
+<div class="card text-secondary border-primary mb-3">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-9">
+                <h3>@Loading()</h3>
+            </div>
+            <div class="col-md-3" style="text-align:right">
+                <div class="float-right">
+                    <input type="button" class="btn btn-primary" disabled="@IsDisabled" @onclick="@AddUser" value="Adicionar Usuário" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>
+                        Id
+                    </th>
+                    <th>
+                        Nome
+                    </th>
+                    <th>
+                        Data de Criação
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in users)
+                {
+                    <tr>
+                        <td>
+                            @item.Id.ToString().Substring(0, 5)
+                        </td>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.CreatedAt.ToString("dd/MM/yyyy")
+                        </td>
+                        <td class="text-right">
+                            <a href="/detailuser/@item.Id"><spam class="oi oi-magnifying-glass"></spam></a>
+                            <a href="/edituser/@item.Id"><spam class="oi oi-pencil"></spam></a>
+                            <a href="/deleteuser/@item.Id"><spam class="oi oi-delete"></spam></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    List<UserViewModel> users = new();
+    protected bool IsDisabled = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await _userService.FindAllAsync();
+        IsDisabled = false;
+    }
+
+    protected void AddUser()
+    {
+        NavigationManager.NavigateTo("/adduser");
+    }
+
+    protected string Loading()
+    {
+        return IsDisabled ? "Lista de Usuários - Carregando os dados..." : "Lista de Usuários";
+    }
+}

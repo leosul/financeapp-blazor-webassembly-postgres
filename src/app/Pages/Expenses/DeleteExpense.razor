@@ -1,0 +1,79 @@
+﻿@page "/deleteexpense/{id}"
+@inject IExpenseService _expenseService;
+@inject NavigationManager NavigationManager
+@using System.Text.Json;
+@using System.Reflection;
+@using FinanceApp.Services;
+@using FinanceApp.ViewModel;
+
+<PageTitle>Deletar Despesa - @expenseViewModel.Name</PageTitle>
+
+<br />
+<div class="card text-secondary border-primary mb-3">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-9">
+                <h3>Deletar Despesa - @expenseViewModel.Name</h3>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="mb-3">
+            <label for="Id">Id</label>
+            <input form="Id" class="form-control" disabled="disabled" @bind="@expenseViewModel.Id" />
+        </div>
+        <div class="mb-3">
+            <label for="Name">Nome</label>
+            <input form="Name" class="form-control" disabled="disabled" @bind="@expenseViewModel.Name" />
+        </div>
+        <div class="mb-3">
+            <label for="CreatedAt">Data de Criação</label>
+            <input form="CreatedAt" class="form-control" disabled="disabled" @bind="@expenseViewModel.CreatedAt" />
+        </div>
+        <div class="mb-3">
+            <label for="Categoria">Categoria</label>
+            <InputSelect id="category" @bind-Value="expenseViewModel.CategoryId" disabled="disabled" class="form-control">
+                <option value=@expenseViewModel.CategoryId>@expenseViewModel.CategoryName</option>
+            </InputSelect>
+        </div>
+        <div class="mb-3">
+            <label for="Usuario">Usuario</label>
+            <InputSelect id="user" @bind-Value="expenseViewModel.UserId" disabled="disabled" class="form-control">
+                <option value="@expenseViewModel.UserId">@expenseViewModel.UserName</option>
+            </InputSelect>
+        </div>
+        <div class="mb-3">
+            <label for="valor">Valor</label>
+            <InputNumber @bind-Value="expenseViewModel.Value" disabled="disabled" class="form-control" id="value" />
+        </div>
+        <div class="row">
+            <div class="mb-3">
+                <input type="button" class="btn btn-danger" @onclick="@Delete" value="Deletar" />
+                <input type="button" class="btn btn-info" @onclick="@Back" value="Voltar" />
+            </div>
+        </div>
+  </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    ExpenseViewModel expenseViewModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        expenseViewModel = await _expenseService.FindByIdAsync(Id.ToString());
+    }
+
+    protected async Task Delete()
+    {
+        await _expenseService.DeleteAsync(Id.ToString());
+        NavigationManager.NavigateTo($"/expenses");
+    }
+
+    protected void Back()
+    {
+        NavigationManager.NavigateTo("/expenses");
+    }
+}
